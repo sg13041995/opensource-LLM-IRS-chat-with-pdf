@@ -1,0 +1,619 @@
+hello everyone welcome to AI anytime channel in today's video we are going to
+build a search Evo PDF app okay so you know in the last few months you would
+have seen many applications like chat with your data chat with your PDF
+Etc so today also we are going to build chat your PDF but in this video we are going to completely rely on open source
+models we will not use any closed Source models or services for example open AI
+Azure open AI pine cone deep lake Vectra Etc we are going to rely on open source
+models and of course Lang chain so we'll start with Lang chain then we'll move to
+sentence Transformers for embedding and then we'll utilize chroma DB you know as
+a vector store and in end we'll use an open source language model called lamini
+LM okay so they are not that big or that large when we when we call large language model but they are good enough
+to you know give you decent accuracy for whatever task you are trying to do when it comes to Natural languages right for
+example semantic search summarization Etc that's the purpose of this video guys this is the only video that you
+need at this moment when you want to do some kind of you know hobby projects pit projects or even a POC at your workplace
+you might be a student Academia researcher or you are a working professional in an I.T industry or in a
+startup this video will help you build POC right end to end I will also cover that what are the fundamental things
+that you need when you are you know trying to build some kind of you know a POC with large language model
+so this is basically text based but you know I have other videos when we have created chat with audio chat with video
+Etc you can also refer to those videos so let's get started so if you see currently I am on this uh hugging face
+uh repudiatory called lamini LM you know what divers heard of digital models for
+large scale instructions not that large but that's really it's extremely
+extremely fascinating at this moment because uh just putting more parameters in your language model will not take you
+anywhere guys because there will be a situation then will not have the energy right that will fuel the data centers we
+have to look at some other approaches that how we focus on some kind of Novel
+architecture or different kind of data models when you talk about high quality data and that's what a new model a new
+language model called Phi one that was that was you know paper was released by Microsoft I have a video my last video
+was on five one maybe you can have a look at that and this model lamini t5738m so 738 million parameters by T5
+very underrated extremely underrated language model is T5 one of the most underrated model okay so T5 plan T5 T5
+XL blah blah blah a lot of other T5 models that you can you know that has been variant of the original T5 we are
+going to look at this model lamini t5738m I already have a video on lamini
+but that for summarization task maybe you can have a look at that as well it's by mbz uai it's an University in
+you know in I think in United Arab Emirates they also provide some of the PHD courses it's a very good University
+coming up in you know in this Arab Arabian country right so this model has been you know basically released by them
+it's for text to text generation model you can see and then we have it's a
+torch based back end you know Transformers and a lot of other details so this is what we are going to use with
+this we'll also use Lan chain the most you know rated GitHub repository
+currently in the last I think the last six to ten months after the origin of chat GPT Langston is the most you know
+used library in last six months okay because it does all the heavy lifting for us so we are going to use Lang chain
+for you know a tech splitter basically for text pre-processing okay it's easier
+to use LinkedIn for text pre-processing and then we'll use one of the chain for example maybe we can use retriever
+retrieval QA because it's going to be a retrieval model that we are utilizing you can also use conversational but
+maybe I'll create one more video you know to create a chat bot interactive chatbot this is not a chat with your doc
+or chat with your PDF application guys many of the my fellow YouTubers are creating chat with your PDF but they are
+just asking one question and retrieving information it has no context no memory and no follow-up question ability right
+so it's basically a search kind of a tool where you come and ask your query and it will retrieve some information so
+this is basically a question answering tool so this is what we are going to be but first I would like to explain you
+what what I mean by it so let me just write it over here and show you so the first thing
+search your PDF excuse me
+search your PDF now this can be one PDF or multiple PDF files how does this work
+guys what are the things that mean it's looking for slightly very quickly the first thing is that we need some PDF
+files in this video we'll only use one PDF just to save some time because when it
+comes to embedding and inferencing it might take a lot of time when you have multiple PDFs mainly for the embedding
+spot when we are creating embeddings through the ingesting that data right so the first is PDF file now once we have
+the PDF file what we need is we need minimum of 16 GB of RAM
+even on 8GB of ram it should work I'm talking about CPU we are not going to utilize GPU in this case 16 GB of RAM
+and that too on CPU but it's better if you have a v v Ram better if you have a
+vram
+vram is nothing but when you have a GPU right so these are the things that we need at this moment right and of course
+python and python 3.10 because we are going to
+use a library called Excel rate you know and accelerate is very beautiful because it helps you you know run large models
+okay they compute heavy models and that's why we are going to use that Library called accelerate okay that's
+what we are going to use so python 3.10 because if you are using less than 3.10 and you are installing accelerate you
+might get some errors you know in in that one so these are the requirement for this okay now how are we going to do
+is you know step by step so the first thing that we have the workflow let me just write here workflow
+how it looks like okay you have your PDF files
+you have your PDF files now the first thing that you have to do we have to use LINE chain
+so line chain will be used now for text pre-processing when I say text pre-processing it kind of loads the file
+kind of uses character text splitter or recursive character text splitter or can
+be any other text splitter right to split that text on some chunks that's what it does so we're going to use LINE
+chain here why are we using line chain is for you know loading so loader
+and the next thing is text splitter now this text splitter has
+many other modules there okay it depends on what you want to use now once we have that the next thing that we use you know
+sentence Transformer so let me just maintain the uniformity of colors there
+just for your better understanding then we need sentence Transformer why why am
+using sentence Transformer let me just explain so sentence Transformer works good when
+you have limited infrastructure okay you don't have a GPU and even on GPU it
+works well because sentence Transformer is very good for question answer kind of a task where you have to retrieve
+information from the embeddings that's where sentence Transformer works good now you can also use many other
+basically the trans uh embeddings model for example you can use vikuna embedding
+so it has their own embedding from hugging phase pipeline you can utilize those as well but those will those will
+be very compute heavy and it might not run on your CPU machine so we'll use sentence Transformer
+so sentence Transformer have been used for basically to create the embeddings
+to create the embeddings and we are going to use LMS a mini LM or something okay so let
+me just uh cut this and we are going to use mini LM so I'm just writing mini LM I think it's
+V6 or something V6 version okay off sentence transformer for embedding so we have line chain and then we have
+sentence Transformer and the next thing is the next income is we need some kind of
+vector stores to we store that embeddings because that's why you know we are talking about pine cone Vectra
+deep lake and lot of other closed Source deep lake might be you know you can call it like the hybrid Source a kind of a
+platform but you know when you got when you talk about pine cone and Vector they are basically uh closed Source platforms or tools
+which will provide you Vector databases so we need open source here and that's why we are relying on chroma DB so let
+me just write it so what I'm going to write here is first that it's
+uh its vector stores we need Vector stores and for
+Vector stores what we need is chroma DB so I'm just writing chroma DB it runs
+natively it's open source very good very beautiful so chroma DB but you can also use fast CPU which was out you know on
+GPU one to use you can use GPU but it also has a CPU kind of a module you can use that I think fast was created by
+Facebook Ai and you can also use that as well if you want to use okay and then we have earlier we have used elasticsearch
+and all I think I hope you were aware about it but if you don't know you can also use their alternative like fast for
+example so we are going to use chroma DV and in this chroma DB
+our Focus will be on Park 8 it's a file format basically for embeddings will store our embeddings in packet format
+okay this basically store all our embeddings now once we have a chroma DV thing here
+okay once we have the embeddings now on top of this embeddings we will learn our llm pipeline
+llm Pipeline and that we will use it from you know hugging phase so let me
+just write hugging face and that's we're gonna we're gonna use La Mini model guys
+so here we'll use lamini and lamini has many weights okay different kind of
+weight so I'm gonna use laminate T5 738 738 aim this is what we are going to use
+for inference this will basically you know infer uh the embedding so for inference we are using this
+as an llm so this is basically you know workflow guys so chroma TV again will be used here to get the embeddings and then
+we'll pass that to llm pipeline that will create and then we'll use and in the inference and this is again combined
+so let me just do this is again combined with line chain because we are going to use a chain
+there retriever chain and then chroma DB will get the embeddings for you so this
+is how end to end it looks like guys this is a this is the workflow whatever you do with your documents you can of
+course you can have couple of others layers like if you are looking at some other ingestion techniques you can you
+know you can use those as well but mainly in more than 90 percent of cases
+if you are building something with your document the text that are the files this is going to be
+workflow either you use an open source model or a closed Source model what will change if you use closed source so when
+you use closed Source this sentence Transformer thingy that you see it will get change in open AI embeddings
+so this will get change in get changes in open AI embeddings if you use closed source and this will
+change in Pine Cone if you are if you are interested to use pine cone because it's very famous so this will change in
+Pine Cone and here we will use either GPT 3.5 turbo or something
+simple thing this is what it will this is what it will happen right when you use flow source no much difference the workflow remains
+same okay you have to understand the fundamentals then you have let me just write it in one two three
+very quickly one of the things you need you need line chain
+and then line chain then you need embeddings and once we have the embeddings you need
+Vector stores then again you need some chains
+by line chain again and that will be again that's that chain
+will kind of you know again you just your llms
+and that will again again use retriever so again which is embeddings
+this is the flow guys this is what you do okay and you can do custom templating templating prompts custom prompts by
+quarks and all this is a high level overview I hope you understand okay this is what you need simple thing it's not
+rocket science right you have documents that can be plethora of documents you create embeddings out of it store that
+in Vector stores why Vector store this is a question in interview people are asking this question why do we need a
+vector database Vector store why not of SQL database this is a question and some one of my friend appeared appeared in an
+interview and somebody asked him this question and and you know inbuilt algorithms semantic
+search cosine Levenstein Jacquard fundamental things right why do we need
+a vector database because it has so many features it helps you with lower dimensional space you have store your
+embeddings it has inbuilt default algorithms cosine similarity to find out
+you know it helps even tasks like semantic search question answering chatbot etc etc
+this is how you understand right now this is on the theoretical part the more Flow Part if you are interested in code
+you know you may move to uh the code part as well but I want you to I want
+you to understand that this is very simple okay and either you use open source closed Source but you should be
+aware about the models 7B 13B 40b 30b renewable parameters and
+whatever else we need so let me now start writing the code let's move to the code you know from Theory guys enough of
+you know uh talking now so if you come over here okay laminate E5 738 let's
+start writing the code and build a QA tool right there okay search your PDF tool now if you come back
+I have a folder called local llm search local large language model search when I
+open that you can let me open in terminal so when I open in terminal I'll
+just go inside code and it will open in vs code now let me activate
+deep learning environment in my I am on Anaconda currently conda activate deep
+learning you can see I'm inside this and so I am back on my Ubuntu system guide
+for at least this video okay I I love Ubuntu I like Linux okay and Konda
+activate deep learning and you can see now let me help you understand what are we doing here
+let me show you ignore git ignore you know because we have to push this on GitHub so I have a
+git ignore and that getting only for python so it will look at V and V by cash VNV folder Etc API is blah blah
+blah it kind of takes care of all those things when you push this to any git
+based you know uh management or the Version Control that we use right Services now I have an MIT license
+anybody can use this code commercially or however you want to use it but makes your laminate T5 is commercial you have
+to check that first thing these are the requirements dot txt before you build this kind of
+application when I say this kind 80 percent of this module or libraries will be common wherever you are watching
+whoever video you are watching and whatever code you are using 80 of this will be common so what I have used I
+have used line chain my favorite library at this moment then I have streamlined because they're going
+to create extremely interface where you can ask query and it will retrieve some information and also with the source
+citation it's very important right that that if a large language model you know generates
+some response it will also give you the citation that from which paragraph which document it has retrieved the
+information and that's why we'll also use this for UI okay and then we have Transformers
+if they would have no Transformer I doubt that you would have seen chargpt now so credit goes to Transformer and
+Google for releasing that attention is all you need paper in 2015 and then we have requests
+so request and then we have torch as a back end then we have accelerate you know accelerate helps you you know run
+large models okay and then we have bits and bytes and we have PDF minus Expedia
+of minor six is full again bits and by Safe 10 sources Etc so we are looking at safe tensors say I will also I'm also
+creating a video on Save tensors guys because it's better to use safe tensors rather than pickle file because that's
+another secure picker will not give you any security when it comes to model so we have to look at some other
+Alternatives and that's where safe tensors help so that video is also coming now we have PDF minor dot six you
+can use Pi PDF you can use Pi PDF too you can use any other PDF Miner plumber
+whatever okay this is basically to you know to do the processing and manipulation with the PDF files then we
+have beautiful soup then we have sentence Transformers sentence Transformers for embedding and here
+comes the chroma DB the vector stores these are the requirement if you are on Anaconda you have to you might install
+it in wherever environment you are but if you are on a python like you don't have an anaconda just create a virtual
+environment and install all these libraries okay that's how I hope you can install it so I'm not showing that now
+very important what you have to do you have to come here laminate T5 what I
+have done in my case because I you know I haven't installed it through directly through hugging phase Pipeline and all
+okay I just downloaded this folder because I think it's better to download this folder because that's not that big
+it's 738 million parameters you can see I have downloaded all the model weights and config file and just on how you
+download it what you have to do you have to click on these three icons and you have clone Repository when you click on
+clone repository it shows you two things the first thing that you have to do you have to install git lfas for large file
+so lfs is required for large file because you have your you know installing more than 500 MB file so you
+need lfs then you have this clone https hugging face that repository that we
+have laminate E5 when you clone this this will create this folder
+lamini T5 738m okay basically and it will have all your weights you can see I
+have dot bin you know model this is the main kind of weight then we have a special tokens tokenizer Etc I am doing
+it locally everything internet is not required once you download all these libraries and also this uh uh this
+laminate E5 model weights so if you come over here
+what I have done I have created a folder called DB I'll show you why I have created this and then I have a folder
+called docs so this is a file let me just show you the file also let me open docs
+and when I double click I open this this is the file Fast Track climate action I have downloaded this from unhdgs United
+Nations sustainability development course this is the file and it has many questions you know these like paragraphs
+to help people understand what is climate change and related things this is the document we are going to you can use any other document you can use Gita
+Bible Quran people have built uh Bible GPT Quran GPT Gita GPT you also built
+something you have IPC Indian penal code if you are in India it's very difficult for people to understand what ipcs are
+right so you can build something like IPC GPT you build football GPT with football tactics you build some other
+gpts whatever gpts you want even hdgs GPT you want to build you know child abuse GPT for child rights GPT whatever
+document that you have whatever Knowledge Management or knowledge base that you have you build that GPT
+so this is the document that we are going to use now okay if I come back here
+you can see these are the docs and keep that in docs folder now let's create couple of files and I like to give some
+credit to i Martinez GitHub repository okay the owner of that private GPT repository private GPT if you don't know
+uh private GPT kind of uses GPT for all groovy and Lamas model and that's a very
+compute heavy we will do our own but couple of codes snippet I have taken from i Martinez private GPT repository
+and all the credit goes to them kudos to them but I have made a lot of changes in that code snippet as well so let's do
+that the first thing that I'm going to do here is I'm going to create couple of files the first is constant.pi so the
+constant that we are going to change so constant dot Pi the first file the next file will be
+airbrush by that will have all our stimulate logic and the next thing that
+will have is will have ingest dot Pi so let's write ingest dot pi as well so I'm
+just going to do ingest dot Pi so these are the three files that we need and in these files we'll write our code the
+first thing is constants so let's write it so this basically is for Chroma DB settings so I'll explain that where
+we'll use this chroma DB settings the first thing is import OS operating system and now the next is from chroma
+so let me just do so from chroma DB dot config we're going to use some settings
+from chroma DB I'll just want to import settings here the first will be Capital so import settings
+that's it and here we'll start writing the code so let's define the chroma settings like so Define the chroma
+settings and I'm just going to write chroma
+settings and here it will have settings and here we go we'll start writing all
+our parameters inside this settings module okay so setting the first is chroma DB implementation basically what
+we are doing here we are saying okay we need park it we need duct DB okay in that format we need and then also need a
+directory so our directory is nothing that's called purchase directory so persist so that's basically you can see
+here the DB folder that we have right so that's basically our persist directory in that we will create an index folder
+and couple of packet files that the embeddings okay that's what we're gonna do here okay so the chroma DB and in
+this chroma DB the first is sorry it's not chroma DB it's chroma DB underscore implementation so I'll just
+write impl and here I'm gonna write the DB plus Park 8 so let's write parquet
+here we go so duck DB Plus Market and the next is persist directory so the
+persist directory is nothing but the DB folder that you see so you can see this
+DB folder that's our purchase directory and the next is anonymized telemetry
+okay we'll keep that false so anonymized
+anonymized telemetry so telemetry
+I hope I spilled it right and on my telemetries of booleans we're gonna do false here
+that looks good and on my Telemetry this is our constraint dot Pi where we are
+handling some chroma DB settings that will help us create the embeddings and
+store that in a packet format through duck DB and we have our perceive directory hdb that's what we are doing
+anonymized Elementary now let's move on and let's write the ingest dot Pi guys okay so
+this ingest dot Pi is very intuitive here we'll use LINE chain for heavy lifting and we'll also do couple of
+things okay so let's do that so the first thing is from Land chain so from launching dot text splitter
+that's what I'm gonna do here so let's do in order so the first is document loader so document underscore loaders
+I'm gonna use import Pi PDF so the first is pi PDF loader
+if you want to load directory from directory you have many files you can again use directory loader there and
+directly loader and you can also use PDF Miner that's what I'm using so PDF Miner loader but I also imported Pi pdfloader
+if I we want to use pipe PDF as well we can use that if we get any error so PDF Miner loader that's the first thing so
+PDF Miner loader directory loader and pipe pdfloat the next thing goes is text printer thingy so the from rank chain
+will Import in order as well so you get a complete understanding that how it works so from link chain dot text
+splitter text splitter import recursive text
+splitter it looks as the Character level recursive you know character
+and text and splitter that's it so recursive character text
+Splitter from line chain dot text splitter the next thing when I use embedding so from Land chain
+Dot embeddings and I'm gonna do import sentence
+Transformer sentence Transformers
+Transformers its Transformer and then embedding and then embedding that's we're gonna do
+here sentence Transformer embeddings Dot embeddings and now though here comes the Retro store so from line chain
+dot Vector stores import I'm gonna use here chroma DB so
+that's basically chroma not the DB so Vector stores so in order everything is happening right now in order even the
+Imports but now will not follow any order for this at least for OS we can't follow any order import OS and now let's
+use that constant that we have created I need a chroma setting from there so I'm going to do import chroma
+settings we are done with our Imports for ingest dot Pi file guys so what we
+have done here we have directory loader PDF manual loader that will load the PDF
+file give it to text splitter give it to sentence Transformer to create the embeddings and then store it in that
+chroma DB that we have Vector stores that's what we are doing now let's define our this directory so persist
+not required OS path let's directly call DB but you can also handle it from dot EnV
+that's what they do in private GPT guys okay uh persist directory in DB now
+write a main function so diff Main and let's write that in depth main the
+first is four we have to look at that root so for root you know or directory
+of files in OS that looks nice OS dot work and then when I use docs is our folder so in this dock you can see I
+have our dock you can also create docs or any other name like Source documents docs data Any
+Other Name whatever name you give it what and this should contain some documents that can be what documents PDF
+csv.js on LinkedIn supports 14 different types of file formats I think they would
+have updated as well when I checked last it was 14 different file formats and that's why I love launching now we have
+OS dot walk Docs and here you can see this looks nice okay so let me just do for file and
+files at least I'm not gonna use tab 9 here is that's what it's using in background for fire and files and now if
+file ends with number when I use the complete thingy here okay Pi PDF maybe this looks nice
+still here and not this so let's remove this what we are doing here if we are checking if the file ends with PDF so if
+I if files ends with PDF let's print that file in terminal to track that if that works so print file now that that
+is okay now here we'll use our loader so the loader and that's we're gonna use PDF Miner loader so PDF Miner loader
+it's a function and inside this we're gonna pass our OS dot path dot join this
+looks nice this is okay now this is done excuse me sorry I'll just do Ctrl G cut
+this off okay now loader PDF finder loader now let's come out of this
+if this if and then so documents
+of variable documents and in this documents I'm gonna just do loader.load
+and this will load documents through the dot load and now here is the text splitter so
+let's define a text splitter recursive text splitter this looks nice recursive text filter I'm gonna pass the chunk
+size and chunk overlap so that's called chunk underscore size every 500 so chunk
+size 500 and chunk overlap so chunk over let's keep smaller chunk
+overlap to save time there okay switch on overlap but this looks nice fine
+PDF okay here is something wrong now this is okay take splitter so we have
+document has loaded the file now we are giving that file to recursive character text splitter you can also use character text splitter if you want now text
+splitter now the next thing is text the variable text and that's when I use text splitter.split and in that split
+documents I'm gonna pass I think it's documents and I'm gonna
+pass this documents now this makes sense so Tech splitter dot split document now here we'll create the embeddings so
+let's write create embeddings here so I'm going to write create embeddings here and in now this
+create embeddings here I'll create the embeddings this looks nice so let's use this so I'm gonna use embeddings
+sentence Transformer and not this at least now we'll use this later once we are making the inference here we have to
+define the model so the model that we are going to use is uh all mini LM lm6 or something okay so
+I think it's all mini or let me check that so I'm gonna do here is uh sentence Transformer
+sentence Transformers blank chain that's what I'm gonna use uh
+sentence Transformer line chain and here we go this is what we need so this is our model name if you are using hugging
+face embeddings you might get some error you know some time okay it has happened with me it might need a token or
+something there are some issue with hugging face uh embedding pipeline there so this is the model that we're gonna
+use so let me just remove this model here by the way and this so this is the model that we
+are using all mini language model l6v2 the version two okay this is the model and create Vector store here so it is
+okay but this is not how it works by the way so now we have used the embeddings model
+okay all mini LM language 6 B2 now here let's write our DB so the DB
+variable and this will have chroma so let's write chroma and got from
+underscore documents and this is embedding so the first thing it takes we have to pass the text and
+then we're gonna pass embeddings and then we're gonna pass persist directory so first each directory equals to
+persist directory and then also use client settings so that's the setting the duck DB parquet right client setting
+anonymized uh Telemetry we don't need that Telemetry thing so client and
+client underscore settings let me do a alt G so client setting and
+client setting is nothing but the chroma underscore settings and that's what the DB thing that we have done so what we
+are doing here in this guys chroma Dot from documents that's coming from line chain we are passing the text that we
+have splitted right using recursive character text splitter we are giving the embeddings that has been created by sentence Transformer and then we are
+giving that directory path for Stitch directory where we will store our embeddings with the help of chroma
+settings that's what this piece of code is doing here now once we have DB we just persist it so it's safe so persist
+DB dot persist and then we do DB equals to none that's it that's what we're gonna do
+here in this case now if that's it so we have written our code
+for you know ingestion guys ingest dot Pi you can use lot of other techniques I
+mean it comes to data ingestion now you're working for some companies or clients for example and a client comes
+to you and says hey look here are 1 000 documents that I have these are all confidential document
+you have to look at her and you have to basically sanitize or redact that's what it calls
+sanitization or a redact those confidential information before passing it to model for whatever purpose
+then you have to added some other layer on top of this ingestion code you can
+use a lot of other technique that I'm trying to say but these are the minimal thing what we are doing in this case let
+me explain we have imported all the required thing then we have defined directory created a
+main function we are loading the document giving it giving it to recursive character text splitter so it
+can split that and then we are passing the document inside that text splitter we are creating the embeddings storing
+in that Vector database chroma.rom underscore documents that's what we are doing for one document 5 to 10 pages it
+might take around 50 to 50 seconds to one minute on a CPU machine you know 16 GB of RAM and
+that's it 16 GB of RAM that's what you need okay for this one you can I have even tried on 8GB of ram it works trust
+me even if you have 8 GB of rams it will work definitely okay I have tried on my other system now let's run this the
+ingestion piece of code we'll first run this code because we are ready to run this okay now here I come and what I'm
+going to do here I'm just gonna run it so how do we run this we're gonna just say python
+and then we're gonna do ingest dot pi once I do this you can see currently
+there is nothing inside this DB folder but it will create a pocket files couple of files with index that's what you're
+gonna do here and that's how it works right when you see keyword based Source right indexing it says we are indexing
+right that's the the underlying Concepts remain the same guys okay nothing changes now let's run this
+now you can see it has printed at fast facts what is climate change because we have you know we have used this print
+file and now we have this if you click on DB you can see that's what I'm trying
+to show you okay when you click on DB let me go inside this DB guys now you have couple of parquet files embeddings
+you can see 0 1 0 0 okay it's embedding so lower dimensional space of your text representation that's what embedding is
+and then you have index you can see metadata and that's where
+you retrieve the source information the citation that's right that's how it's going to help when you have uid unique
+identifier very intuitive guy rights data science from data science to Ai and machine
+learning the journey is completely fascinating and I hope you enjoying your time you know with this technology that
+we are currently you know working with so if I come back we are successful now
+with our ingesting now what we're gonna do here we have to basically use
+this embedding on top of a large language model for inference let's do that very simple come to this app.pi
+let's import streamlit first because that's what we're gonna do here so import simulate add SD something like
+this okay import stimulate SST and now Transformer thingy so from Transformers
+import Auto tokenizer I'm going to use Auto tokenizer okay you can also use T5 token
+either any other token either as well you have to look at that okay you can play with it okay Auto tokenizer I'm gonna use Auto model for sequence to
+sequence language model that's what I'm going to use for modeling part to load the model so Auto model
+and that fourth sequence to sequence because it's sequence to sequence LM
+model that's what I'm going to use here sequence to sequence language model now the pipeline tab line is intelligent
+I'm using tab nine okay you can also use copilot if you have 10 per month you can use that now from Transformers import
+pipeline let's import torch that's the back end import torch and import base64
+did I say beautiful soup sorry it was based 64. okay when I was talking about requirements txt it was not beautiful
+soup okay base64 import base64 and what I'm going to do
+here is uh maybe you can also use text wrap because when you get the output we can have we
+have to wrap that so maybe you can also import that I'm not sure let's do that if we need it import text wrap and now
+again the LinkedIn thingy so from line things why I'm gonna write here I'm just going to use it from here right ingest
+dot Pi what we need here is we need this couple of things at least
+so let's come to app.pi we need these two things and we also need from line chain
+we need chains now so chains four different type of chains are available I guess in line chart I don't know if you
+have the operator as well they keep on updating guys from LinkedIn dot chains import uh retrieval so I'm gonna use
+retrieval retriever and I think it's q a retrieval keyword
+that's how I use here retrieval QA okay chains we also need pipeline that will pass the llms right so from line chain
+dot hugging phase hugging face excuse me from Lang chain
+dot hugging phase not not hugging face I'm making a mistake it's llms from Lion King dot LMS
+then we will import hugging phase pipeline so hugging face pipe line yes
+that's it so we have sentence Transformer embeddings and chroma and retrieval we also need that chroma
+setting by the way so let's bring this guy here as well so from constants import I'm gonna use this
+chroma settings that's it that's our import for app.pi so beautiful isn't it
+right now let's do that so the first thing that we have to do the first thing what we have to do with the checkpoint so the first thing is checkpoint
+and this checkpoint is nothing but this this you see laminate T5 the folder name
+so let's let's use that so they're called lamini T5 you can see that that makes sense
+could also remove that it's not required but you can also keep that it doesn't go outside of the folder it looks in that folder
+this makes sense this is correct so I'm going to use tokenizer from Auto tokenizer this is also right so Model
+Auto model for sequence to sequence LM from pre-train but inside this I'm gonna use couple of things here let's define
+that guys okay so checkpoint that's why we're using Excel rate
+so checkpoint excuse me I don't need all of you sorry
+checkpoint and now I'm gonna use device map D5 underscore map okay which is very
+very important to understand guys what is device map okay so device map has first three three or four different type
+of values Auto automatically looks at your infrastructure the environment if
+you have a Kuda if you have a CPU machine and when you keep it auto it automatically offload the weights okay
+it automatically suffers those weights whatever you know number of CPU CPUs if
+you have even if you have one CPU in that case right that's what Auto automatically looks at it but if you want to exploit it
+explicitly defined that you don't want to keep Auto okay you can maybe keep CPU
+you can keep Cuda because if I do here Cuda for example
+it will look at that if I have Cuda GPU or not that's called you are defining it
+in an explicit manner okay that's what Kuda does here okay and if you do CPU it will look at only the CPU cores okay
+what I'm going to do here I'm gonna just do auto so let it Define that's why you know we're using accelerate here guys
+very very important try to to understand this now we have defined device map Auto and what I'm going to do here is I'm
+gonna use the torch D type the data type of the torch tensor so torch underscore
+D type and this is nothing but I'm gonna use flow 32 so torch
+dot float underscore 32 or not underscore the torch dot flow 32 that's
+what I'm gonna use that's what the model is doing here so we have our loaded our tokenizer and models in model we're
+passing the checkpoint device map and torch D type that's what we are doing now let's write the function guys so
+Define the first function I'm going to write is llm pipeline let's define our pipeline for text generation because we
+are generating text if you want to perform any other task like summarization that I have shown my
+previous video of lamini please go through and look at that in llm a playlist where I have not ever haven't
+used text generation I have used the summarization pipeline you can also do that depends on what what kind of task
+you are looking at it so llmn pipeline and in this llm pipeline I'm just going
+to write all of my code the first thing is pipe and the spice is nothing by the way the pipeline so I'm gonna use
+pipeline and in this pipeline I'm gonna write all the things that are required so the
+first thing is text to text text to text generation because we'll have our input text which is a query the
+question that we'll ask and it will respond some text text in text out text to text generation that the first thing
+or the next thing is model equals model so I'm going to write model equals model so let's write that okay maybe let's
+define that as base model so model equals base model
+base underscore model by the way base underscore model and model underscore
+tokenizer equals tokenizer so this is okay and now what I'm gonna do here I'm going to define a maximum length of
+tokens as an output as I this is for demo purpose this is for you so you can understand learn from
+this models this video basically in general you can play with these numbers totally depends on what kind of machine
+you are using the infrastructure in my case I'm just gonna do Max token here and Max Lane sorry not token it's max
+length and max length I will keep 256. you can keep 512 1096 as well depending
+on what kind of machine you are using so max length 256 and I'm gonna do sampling equals to two so do samples
+by the way sorry two sample equals two it's a Boolean value do samples true and I'm also going to use some top P for
+example creativeness on temperature so let's use temperature for Randomness and creativeness so how creative the
+responses are right so temperature and temperature equal to zero point let's keep a very small temperature
+number here okay I don't want to be too creative okay temperature otherwise do not get good responses temperature
+because it's a QA tool you like to have an exact response made it very similar
+but if you are building a chat bot you might want to increase this temperature value so now we have temperature now
+let's use top p top underscore P 0.95 the standard 0.95
+this makes sense now we have done this what are we doing here guys
+if creating a pipeline for language model and text to text generation task model
+has been defined tokenizer has been defined some parameters have been defined very fundamental now the next thing that is we have to use hugging
+first pipeline here so local llm I'm just gonna use hugging face pipeline not manager by the way hugging face pipeline
+and here I'm going to pass pipeline uh equals pipe here we go local LM let's
+return this local l m guys now this function llm pipeline kind of contains
+our local language model lamini here I'm going to use a decorator
+because in the runtime I don't want to load this model again and again so I'm going to use cash
+resource by stream lead you also have cache data if you want to if you're working with csvs and numpy eyes and Etc
+so St dot KS resources I'm just gonna call Cash resource it's not resources I guess it's cash resource here we go the
+first function has been defined and looks good what we have done so far all the
+libraries have been you know imported then we have this model tokenizer and
+parameters device map the llm pipeline function text to text text generation tokenizer maximum length you can tweak
+these numbers now here we go the question answering area we have to use those all of the things embeddings and
+language model right so let's write that function Ln and in this
+the first thing that I'm going to do here is I'm going to call this llm pipeline function so llm pipeline
+the function that we have defined on top internet pipeline the next thing is embeddings for sale so embeddings and
+for embeddings we need sentence Transformer and the model name again will be the same so let me do one thing let me just
+bring that from here model name and I'm just going to use that here
+model name embeddings have been done now DB and this sign this time not from
+chroma Dot from documents it said only be chroma because we're just loading that
+embeddings let's do that so chroma
+in this chroma persist directory the first thing so persist directory and the perceived directory is
+nothing but the DV let's define it right here so perceived directory is DV and the
+next thing that I'm going to do is embedding function embedding function
+and inside this embedding function let's write this embeddings by the way embeddings and then the client setting
+again okay so client settings and it's not going to be client
+setting like this client settings be chroma settings here we go chroma settings
+let me do an ALT G chroma settings now you can see tab 9 is very smart okay so
+it's very intelligent Services smart is not the right right word very intelligent now DB we have
+defined okay this is the folder get the embedding from here now we have to retrieve that and that's where line
+chain retrieval chain comes in play so let's do that so retrieval okay so let's
+write Retriever and in this retriever I'm gonna use DB dot as retriever
+here we go DB dot as Retriever and in this retriever I'm gonna pass couple of
+things not in this retriever the next the chain so retriever DB dot as retriever now
+this contains that embedding that we need to infer inference this particular
+Retriever and here we go the keyword let's define the QA so QA the question answering
+in this I'm gonna use retrieval yes excuse me
+retrieval QA I'm gonna use this and inside this I'm gonna use couple of
+things here so retrieval QA the first thing is it's not readable keyway okay it's retrieval QA Dot
+from underscore chain type I guess so from chain
+type it seems like that let's see if we get any error guys so
+retrieval keyword Dot from chain type okay and now what I'm gonna do here is
+the first thing is llm so Ln equals llm and the next thing is
+chain type let's keep it stuff now chain type is also very crucial for summarization task you use map
+reduce right it depends what kind of chain type you are using it totally depends on the task that you have mapreduce is there
+okay and then I think there are four okay completely forgot the the other two map reduce stuff and a couple of
+compacts the couple of others as well so chain type so the chain type equals to stuff
+and the next thing is excuse me I chain type stuff and the next type here
+it goes the retriever equals retriever this will be retriever equals and the
+return Source document we need that for metadata okay so return Source documents
+so return Source document and in this return Source document what
+I'm going to use here is true it's a Boolean value either you give a false or true
+here we go our function has been defined guys now let's return this keyway
+let's use sd.cash resource in this case as well we have to Cache the resource if
+we are in the same runtime okay on estimated interface what we have done we have written two functions very very
+intuitive functions okay these are the crucial functions most of the poses that you are building most of the projects
+that you are doing with large language model on documents this will be the workflow okay now what I'm going to do
+here I'm going to write one more function for process answer so let's do that so what I'm going to do here is Define process
+answer so process underscore answer and inside this I'm gonna pass my
+instruction the question that I have Okay so let's call it instruction process answer instruction and here I'm
+gonna use a empty string for response so let's do that this goes
+like this response I'm gonna use instruction and instruction I'm going to use
+instruction so this one away my instruction by the way that's it and here now let's
+call that function the function that we have defined on top QA llm
+and in this we'll pass our instruction so QA rlm now let's have a variable called
+generated text that will hold our generated text so let's call this genetic text path that instruction
+inside this QA that's what we're going to do here generated text QA instruction and we'll
+have our answer so answer so we only need uh a result answer and uh
+metadata so let's do that so answer I'm gonna use generated text
+and only the result so result United text result okay so let's do that
+so this is what we are doing here in this guy so we have genetic text keyway instruction generated text result
+this looks nice what else now answer is done so let's return this
+by the way so far so return answer and also generated text
+okay let's let's return both answer and right let's see that okay what kind of responses we are getting so
+response instruction equal to instruction QA LM generated text QA
+instruction Answer United texture result this looks nice return answer generator now here we go we have to write the
+estimate function guys so let's write a stimulate thingy Okay so let's define the main function
+and inside this the first thing is St dot title in HCL title I'm going to write here
+search search your PDF something like this
+search your PDF and I need couple of emojis so let's search for parrot Emoji
+which is for line chain so parrot emoji where can we get this parrot emoji
+hello can we get this guy so let's use this guys so
+this is what we have doing I need a red one that says how it resonates to line chair but this is okay
+and then I need a PDF emoji
+PDF page facing this looks okay let's use this
+and I'm gonna use this so we have emojis also to make it little fancy you know and then let's call with
+st dot expander this kind of looks at some label about
+the app about the app and here we go inside this I'm gonna write some
+markdown and stuff here okay maybe so HD dot markdown so St Dot
+markdown and inside this I'm gonna write couple of things
+so inside this and let me just this is a demo this
+looks nice this is a demo of search engine for PDFs no not like this not a
+demo Guy this is a this is a generative AI
+this is generative AI powered question and
+answering question and answering app that responds
+that responds to question about your
+PDF file that's what I'm gonna write here about the PDF file so let's do that PDF file this is what I want to do here
+now this is done let's get out of this okay and let's
+have a variable called question here and this question is nothing but the text area so let's call this 80. text area
+and inside this I'm gonna use here enter your questions so enter by the way sorry
+enter your question and enter your quiz excuse me why I'm
+not giving this code I don't know now actually now let's have a button called if HD dot button
+this buttons would not be let's give it something like search
+or something okay if your button search and here we go
+we're gonna use an info here so HD dot info and I'm gonna use uh your question
+and your question for example something like this your question
+plus this go question this is okay so your question and
+question and I will also use hd.info and inside this your answer so let's do that
+so your answer your answer this is okay it says connection failed because there's a
+power cut in my area your answer we don't need power anymore because we have downloaded the models if you dot info
+your answer and here we go the power came back let me just do this my monitor
+your question and your answer by the way yes so here we go let's couple of variable answer
+and metadata so we store this answer and metadata I'm gonna use that function called process answer I'm gonna pass
+this question so let's pass this question and that's it
+if you don't write maybe for example let's write this to go to write and this
+would contain my answer and then SD dot right with the metadata
+so this should contain my metadata this is the app that we have built guys okay so we have written the code now okay let
+me just also do if main ah excuse me I don't know that's I have to handle that from Json file for vs code let's do this
+if name so if underscore underscore name
+and underscore underscore equals equals and I'm gonna use your underscore
+underscore Main underscore underscore and that's where you know when you need tab 9 help it
+doesn't help you okay main for this manual okay this makes sense okay so we
+have main uh it's okay so what we have done in this airport by imported all the libraries
+loaded the model written the lln pipeline function q a llm where we are using all those things
+that we have done this this function kind of utilizes everything that we have done so far in njs and wherever model
+this basically process the answer and this is the air let's run this guys why are we waiting for so what I'm going to
+do here I'm going to run this so let's run it and see if we get any error so if you come over here
+let's run streamlit run app.pi
+meanwhile let me minimize this you can see we have got our app
+it's always search your PDF I can see some spelling mistakes but this is okay about the app
+when I post it on GitHub repository it will be even more fancier at least okay about the app this is a generative AI
+power question and answering app that responds to questions about your PDF file let's ask the question and see if it's able to retrieve that's why we have
+built this so let me ask what is climate change is the question I'm asking let's ask
+this and see if you're getting any error if it's able to give give me the result
+now once you ask this question it might take up to few seconds to few minutes
+I'll go up to few minutes because it has to run that on it's running on a CPU here we go it didn't even take 30
+seconds okay it was like too fast climate change is a natural process where temperature
+rainfall wind and other elements vary over decades or more fantastic
+here is your query because we have the metadata and again you can customize it okay customize it the way you want
+that's the power of log language model okay you have to appreciate large angle model guys okay if you see query here
+what is climate change now the result is climate change the same result that we have printed over here on top now we're
+also giving the source document and you can see the source document is our PDF if not the laminis knowledge base it
+means the model is completely working fine okay to retrieve the information and you can see also it's giving me the paragraph climate change you know blah
+blah blah you can see source and we have you know around uh zero to four you can control it the
+number of K in the source document you can pass k equals to one for example if you only need one source but it's okay
+you can play with it please watch my previous videos as well because I have shown all these techniques on the how to
+only retrieve One Source or how to use custom prompts Etc now if you see in
+this Source document it's retrieving the information from there it's not hallucinating it's it's given the right
+answer what is climate change so climate change is the natural process where temperature rainfall wind and
+other elements vary over decades or more this is amazing isn't it guys
+now there can be two things if you are on a very limited
+uh if you have a very limited memory okay and computational power in your machine
+when you ask the second question it might crashes your application so again you have to start you know you have to
+end the runtime and the task from task manager or somewhere you have to restart again because it's compute heavy so you
+have to rely on something else like some other virtual machines or some GPU based machines let me do one thing let me you
+know so what the error I'm getting okay when I run it again but that's completely fine okay because you don't
+expect this to deploy in production on this kind of CPU machine at least not on one CPU it at least you need minimum of 8 CPUs with many cores so
+what else we can ask this guys
+let me read it
+highest level in two million years as a result the Earth is about 1.1
+degree celsius warmer than it was in 1800 let me ask a question okay
+people are experiencing climates and let me ask let me ask this question is people
+are people experiencing
+climate change let me see this okay the question that I have asked
+let me ask this question and see if I get any error so I'm asking this question but it will probably crash but
+this is completely fine okay you no okay see yes we got the answer yes people are
+experiencing climate change in diverse with and we have maximum number of tokens as 256 that's where we're getting
+this concise answer if you increase that it will get a bigger answer as well here people are experiencing climate change
+in diverse ways you can see that right and again the same document fast fact
+what is climate change in the same period that we have uploaded this is fantastic right you can see right and let's this is this
+is what I wanted to do in this video guys I hope you understood okay and how simple it is to build this
+kind of application but there are too many of challenges when you
+do this for a client in for your client if you're working in IT industry or at
+your workplace you have to look at many other factors because before deploying it to
+production how to control hallucination what are the response validation mechanism you put in place how you
+validate the response you put this Source document citation so it can at least give it little explainability on
+the output and this model should not be too opaque right so there are a lot of challenges when it comes to you know work with
+these models the language models but they are improving I will recommend this model you know
+because this works fine for summarization for retrieving question answer in the next video I'm creating I
+will create a chat bot chatbot kind of a interface okay with the same model so
+this code will be available on GitHub repository the entire code that you see here okay entire code will be available
+on my GitHub repository okay and if you have any question thought feedback for
+me please let me know in the comment box okay and if you want to reach out to me
+you can reach out to me through social channels and I also have created a community on WhatsApp if you want to
+join that please find that in our YouTube Banner okay the link is there you can also be given in the description
+as well so I hope you learned something from this video guys how to create chat with PDF chat with your data search your
+data whatever you name it application okay with completely open source models
+no open Ai No closed Source models or Services okay it's completely open source we haven't used the internet also
+you saw that power kit power cut right without internet we were writing our code and running the models
+so that's all you know I wanted to do in this video it was very EXT you know very
+intense I will say this video because I think it's a long video but some 3D the workflow the core I wanted
+to cover everything and please like the video okay if you like the content and if you haven't
+subscribed the channel yet please consider subscribing it that will motivate me to create you know more
+videos in future okay that's all for today's video guys thank you so much for
+watching see you in the next one
